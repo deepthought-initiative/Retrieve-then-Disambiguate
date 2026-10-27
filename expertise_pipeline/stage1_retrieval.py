@@ -41,28 +41,6 @@ def load_tfidf_index(index_dir):
     return vectorizer, matrix, papers, bibcode_to_row
 
 
-def load_paper_metadata(index_dir):
-    """Lighter alternative to load_tfidf_index() for callers that already have Stage 1 retrieval
-    results precomputed elsewhere (e.g. a shared candidates_cache built once centrally) and only need
-    paper metadata (title/abstract/year/author/aff) + the bibcode -> row lookup to build mentions
-    from a given set of candidate bibcodes -- never touches the vectorizer or TF-IDF matrix files at
-    all. Those two are the expensive part (a large sparse matrix, plus a slow single-threaded
-    row-reorder to sort by year) -- fine to pay once in one process, very much not fine to pay
-    redundantly in every one of several worker processes that will never actually run retrieval
-    themselves (measured: ~30GB RES and 400s+ per worker just to load+reorder it, before any actual
-    work even starts -- see multi_gpu_eval.py's worker, which uses this instead).
-
-    Same sort-by-year + bibcode_to_row construction as load_tfidf_index(), so bibcode_to_row values
-    from the two loaders are consistent with each other (both derive from the same source file and
-    sort order) even though this one has no matrix to keep index-aligned with it.
-    """
-    papers = pd.read_parquet(f'{index_dir}/{PAPERS_FILE}')
-    sort_order = np.argsort(papers['year'].to_numpy(), kind='stable')
-    papers = papers.iloc[sort_order].reset_index(drop=True)
-    bibcode_to_row = pd.Series(range(len(papers)), index=papers['bibcode'])
-    return papers, bibcode_to_row
-
-
 def _cosine_similarity_chunk(query_vector, matrix_chunk):
     """Module-level (not a closure) so it's a stable target for ThreadPoolExecutor.submit."""
     return cosine_similarity(query_vector, matrix_chunk)[0]

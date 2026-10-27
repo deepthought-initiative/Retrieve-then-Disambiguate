@@ -48,9 +48,6 @@ def dbscanc(X, years, names, eps=0.5, min_samples=5, year_eps=3, metric='cosine'
 
     # Instance-level constraints
     def satisfies_instance_constraints(i, j):
-        # Name compatibility (instance-level)
-        if name_compatible(names[i], names[j]) is None:
-            print(names[i], names[j])
         return name_compatible(names[i], names[j])
 
     # Filter neighborhoods with instance-level constraints

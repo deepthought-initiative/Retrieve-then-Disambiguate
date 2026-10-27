@@ -11,7 +11,6 @@ import numpy as np
 import torch
 from torch import nn
 
-# TODO: point at the real trained checkpoint once it's available.
 CHECKPOINT_PATH = '1_specter_chars2vec_nceepoch=67-val_loss=7.47.ckpt'
 
 INPUT_DIM = 818   # 50 (chars2vec) + 768 (SPECTER2)

@@ -24,6 +24,8 @@ from expertise_pipeline import find_experts
 from expertise_pipeline import nand_embeddings, nand_model
 from expertise_pipeline.stage1_retrieval import load_tfidf_index
 
+PROJECT_DIR = Path(__file__).resolve().parent
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Rank reviewer candidates for one paper")
@@ -40,13 +42,13 @@ def parse_args():
     parser.add_argument(
         "--index-dir",
         type=Path,
-        default=Path("tfidf_index"),
-        help="Directory containing the saved TF-IDF index (default: tfidf_index)",
+        default=PROJECT_DIR / "tfidf_index",
+        help="Directory containing the saved TF-IDF index",
     )
     parser.add_argument(
         "--checkpoint",
         type=Path,
-        default=Path(nand_model.CHECKPOINT_PATH),
+        default=PROJECT_DIR / nand_model.CHECKPOINT_PATH,
         help="Trained NAND checkpoint",
     )
     parser.add_argument(
@@ -120,17 +122,16 @@ def main():
         device=args.device,
     )
 
-    ranking = result["ranking"].head(args.top_k).copy()
-    reviewers = []
-    for record in ranking.to_dict(orient="records"):
-        reviewers.append(
-            {
-                "rank": int(record["rank"]),
-                "name": record["display_name"],
-                "expertise_score": float(record["expertise_score"]),
-                "paper_count": int(record["paper_count"]),
-            }
-        )
+    ranking = result["ranking"].head(args.top_k)
+    reviewers = [
+        {
+            "rank": int(record["rank"]),
+            "name": record["display_name"],
+            "expertise_score": float(record["expertise_score"]),
+            "paper_count": int(record["paper_count"]),
+        }
+        for record in ranking.to_dict(orient="records")
+    ]
 
     print(json.dumps(reviewers, indent=2, ensure_ascii=False))
 

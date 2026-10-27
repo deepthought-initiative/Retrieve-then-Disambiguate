@@ -1,0 +1,6 @@
+__pycache__/
+.ipynb_checkpoints/
+*.py[cod]
+.pytest_cache/
+tfidf_index/
+*.parquet

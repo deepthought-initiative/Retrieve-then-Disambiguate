@@ -55,7 +55,11 @@ def find_experts(
         )
 
     mentions = stage2.get_candidate_mentions(
-        candidates['bibcode'], papers, author_records_df, bibcode_to_row, orcid_lookup
+        candidate_bibcodes=candidates['bibcode'],
+        papers_df=papers,
+        author_records_df=author_records_df,
+        bibcode_to_row=bibcode_to_row,
+        orcid_lookup=orcid_lookup,
     )
     if mentions.empty:
         # No candidate papers (e.g. a query paper older than everything in the index) or no author
