@@ -1,0 +1,21 @@
+# Runtime dependencies for the retrieve-then-disambiguate pipeline.
+
+numpy>=1.24,<2.0
+pandas>=2.0,<3.0
+scipy>=1.10,<2.0
+scikit-learn>=1.3,<2.0
+joblib>=1.3,<2.0
+pyarrow>=12.0,<20.0
+
+# Neural embedding and NAND model dependencies.
+torch>=2.1,<3.0
+transformers>=4.35,<5.0
+adapters>=0.2,<2.0
+chars2vec>=0.1.3
+tensorflow>=2.13,<2.17
+tqdm>=4.65,<5.0
+
+# Profiling and notebook support.
+psutil>=5.9,<8.0
+matplotlib>=3.7,<4.0
+jupyterlab>=4.0,<5.0
