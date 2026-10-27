@@ -1,6 +1,17 @@
 __pycache__/
 .ipynb_checkpoints/
+**/.ipynb_checkpoints/
 *.py[cod]
 .pytest_cache/
+.coverage
+.coverage.*
+.cache/
+.DS_Store
+*.log
+*.swp
+*.swo
+*~
+*.tmp
+*.bak
 tfidf_index/
 *.parquet

@@ -45,6 +45,24 @@ The trained NAND checkpoint is included at the repository root:
 
 The index and checkpoint must be redistributed only under licenses that permit their use.
 
+## Rebuild the TF-IDF representation
+
+The retrieval vocabulary is fit on the released query-paper table, using the title and abstract
+with English stop words removed and unigrams and bigrams retained. The fitted representation is
+then applied to the candidate-paper corpus:
+
+```bash
+python build_tfidf_index.py \
+  --vocabulary-papers released_query_papers.parquet \
+  --candidate-papers candidate_papers.parquet \
+  --output-dir tfidf_index
+```
+
+The candidate table must contain `bibcode`, `title`, `abstract`, `year`, `author`, and `aff`.
+The 500 released query papers are sufficient to reproduce the vocabulary-fitting procedure, but
+they are not sufficient to reproduce retrieval results over the original large corpus. That also
+requires the candidate-paper corpus or the precomputed TF-IDF matrix.
+
 ## Run a query
 
 For a query paper already present in the index:
